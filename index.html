@@ -178,6 +178,8 @@ main{max-width:680px;margin:0 auto;padding:6px 22px 20px}
 .casa-row{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:14px 0;border-bottom:1px solid var(--line);margin-top:12px;border-top:1px solid var(--line)}
 .casa-row small{color:var(--muted);margin-left:8px;font-size:13px}
 .casa-row.on{color:var(--pri);font-weight:650}
+.btn3d{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;text-decoration:none}
+.btn3d svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media (prefers-reduced-motion:reduce){.plan-ov,.plan .pr,.plan .walls,.plan .plab{transition:none}}
 
 /* ---------- conti ---------- */
@@ -288,7 +290,7 @@ input[type=range]{padding:0;background:none;accent-color:var(--btn)}
 'use strict';
 /* ---------- costanti ---------- */
 const KEY='arredamitu:v1';
-const APP_VERSION='1.3';
+const APP_VERSION='1.4';
 const PEOPLE={C:'Cristian',P:'Paola'};
 const PALETTE=['#3F7A4F','#A0703A','#4A74A8','#8A5A8C','#B5543C','#35898A','#B08A1E','#7D847A'];
 const DEFAULT_CATS=[
@@ -580,11 +582,15 @@ function roomList(k){
   return`${its.length?`<div class="gh"><span>${nameOf(ROOMS,k)}</span><small>${voci(its.length)}</small></div>${sorted.map(it=>itemRow(it,false)).join('')}`:''}
   <button class="btn add" data-act="newIn" data-v="${k}">+ Aggiungi voce in ${nameOf(ROOMS,k)}</button>`;
 }
+/* vista 3D: stanza dell'app -> inquadratura in casa3d.html */
+const VIEW3D={camera:'c1',studio:'c2b',salotto:'ingr',cucina:'cuc',bagno:'bagno',corridoio:'dis',terrazza:'ter',casa:'casa'};
+const link3d=()=>`<a class="btn btn3d" href="casa3d.html#${VIEW3D[ui.room]||'casa'}"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>${ui.room&&ui.room!=='casa'?'Vedi '+esc(nameOf(ROOMS,ui.room))+' in 3D':'Vedi la casa in 3D'}</a>`;
 const stanzeHint=()=>`<p class="note" style="text-align:center;margin-top:14px">Tocca una stanza per vedere le sue voci.</p>`;
 function viewStanze(){
   const casa=roomStats('casa');
   return`<div class="plan-wrap">${planSvg()}<div class="plan-ov ${ui.room?'show':''}" id="planOv">${ui.room?roomOverlay(ui.room):''}</div></div>
     <div class="plan-foot">Verde più intenso = più spesa prevista${upcoming(30).length?' · <i class="pbdot"></i> scadenze entro 30 giorni':''}</div>
+    <div id="link3d">${link3d()}</div>
     <button class="casa-row ${ui.room==='casa'?'on':''}" data-act="room" data-v="casa"><span>Tutta la casa<small>${casa.its.length?voci(casa.its.length):'nessuna voce'}</small></span><b class="num">${eur(casa.t.cost)}</b></button>
     <div id="roomList">${ui.room?roomList(ui.room):stanzeHint()}</div>`;
 }
@@ -615,6 +621,7 @@ function selectRoom(k){
     if(prev&&prev!==cur){ov.classList.remove('show');ovTimer=setTimeout(fill,220)}else ovTimer=setTimeout(fill,reduceMotion()?0:260);
   }else ov.classList.remove('show');
   $('#roomList').innerHTML=cur?roomList(cur):stanzeHint();
+  const l3=$('#link3d'); if(l3) l3.innerHTML=link3d();
 }
 
 function viewConti(){

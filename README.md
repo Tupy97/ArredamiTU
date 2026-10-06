@@ -14,3 +14,8 @@ I dati restano solo sul dispositivo (memoria del browser). Da **Impostazioni** p
 
 ## Aggiornamenti
 Quando carichi una nuova versione di `index.html`, incrementa anche `CACHE` in `sw.js` (es. `arredamitu-v2`) così il telefono scarica subito la versione nuova.
+
+## Casa in 3D
+`casa3d.html` è il modello 3D della casa (pareti dalla Tavola 3, elementi fissi e arredo deciso). Si apre dalla scheda **Stanze** con il pulsante *Vedi in 3D*: se è selezionata una stanza, il 3D parte già inquadrato su quella stanza. La libreria 3D (three.js r128) è nella cartella `vendor/`, così funziona anche offline una volta aperta la prima volta.
+
+Quando il modello viene aggiornato, sostituisci `casa3d.html` e incrementa `CACHE` in `sw.js`.
