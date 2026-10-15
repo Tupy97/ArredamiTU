@@ -20,11 +20,12 @@
 @media (prefers-color-scheme: dark){:root{
   --bg:#0F1511; --panel:rgba(24,32,26,.92); --fg:#E5EBE5; --muted:#99A69B;
   --line:rgba(255,255,255,.10); --accent:#7FB08A; --accent-fg:#0F1511; --scene:#1B231D; color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0}
 html,body{height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--font);overflow:hidden}
 #app{position:relative;height:100%;width:100%}
 canvas{display:block;width:100%;height:100%;touch-action:none}
-.bar{position:absolute;left:16px;right:16px;top:calc(12px + env(safe-area-inset-top,0px));display:flex;flex-wrap:wrap;gap:8px 16px;align-items:flex-start;justify-content:space-between;pointer-events:none}
+.bar{position:absolute;left:16px;right:16px;top:12px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:flex-start;justify-content:space-between;pointer-events:none}
 .title{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;backdrop-filter:blur(6px);pointer-events:auto;max-width:440px}
 .title h1{margin:0;font-size:16px;font-weight:600;letter-spacing:.01em;text-wrap:balance}
 .title p{margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.45}
@@ -39,28 +40,31 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 .sw{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid var(--line);vertical-align:-1px;margin-right:6px}
 .controls{position:absolute;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;align-items:center}
 .row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.back{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-4px 8px -4px -4px;border-radius:50%;background:var(--accent);color:var(--accent-fg);text-decoration:none;font-size:20px;line-height:1;vertical-align:middle}
-#vsel{display:none;font:600 14px var(--font);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:9px 14px;max-width:100%}
 button{font:500 13px var(--font);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;backdrop-filter:blur(6px)}
 button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:transparent}
 button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.topbar{position:absolute;left:16px;top:calc(12px + env(safe-area-inset-top,0px));z-index:3;display:flex;gap:8px;align-items:center}
+.back{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-fg);text-decoration:none;font-size:22px;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.bar{top:calc(56px + env(safe-area-inset-top,0px))}
+#vsel{display:none;font:600 14px var(--font);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:9px 14px;max-width:100%}
+.bar.off,.bar.off ~ .hint{display:none}
 .hint{position:absolute;right:16px;top:calc(12px + 50vh);font-size:11px;color:var(--muted)}
 @media (max-width:900px){.legend.mat{display:none}}
 @media (max-width:1100px){.hint{display:none}}
-@media (max-width:700px){.legend{display:none}.hint{display:none}.title{max-width:none}.title p{display:none}button{padding:6px 10px;font-size:12px}#views{display:none}#vsel{display:block}.row.opts{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none}.row.opts button{flex:none}}
+@media (max-width:700px){.legend{display:none}.hint{display:none}.title{max-width:none}button{padding:6px 10px;font-size:12px}#views{display:none}#vsel{display:block}.row.opts{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none}.row.opts::-webkit-scrollbar{display:none}.row.opts button{flex:none}}
 </style>
-<style>*{box-sizing:border-box}html,body{margin:0}</style>
 </head>
 <body>
 
-
-
 <div id="app">
-  <canvas id="c" aria-label="Modello 3D dell'appartamento con l'arredo della zona giorno"></canvas>
-  <div class="bar">
+  <canvas id="c" aria-label="Modello 3D dell'appartamento arredato"></canvas>
+  <div class="topbar"><a class="back" id="back" href="./" aria-label="Torna ad ArredamiTU">‹</a><button id="t-info" aria-pressed="false" aria-controls="infobar">Mostra info e legenda</button></div>
+  <div class="bar off" id="infobar">
     <div class="title">
-      <h1><a class="back" id="back" href="./" aria-label="Torna ad ArredamiTU">‹</a>Casa in 3D</h1>
-      <p>Pareti dalla Tavola 3 (scala 1:100), arredo della zona giorno dal progetto. Altezza 270 cm stimata; nel disimpegno nicchia chiusa da ante e controsoffitto-ripostiglio a 220 cm. Superfici calcolate dalla pianta, da verificare.</p>
+      <h1>Casa in 3D</h1>
+      <p>Pareti dalla Tavola 3 (scala 1:100), arredo di tutte le stanze e del terrazzo dal progetto, climatizzatori (3 split + motore esterno). Altezza 270 cm stimata; nel disimpegno nicchia chiusa da ante e controsoffitto-ripostiglio a 220 cm. Superfici calcolate dalla pianta, da verificare.</p>
+      <p id="camnote"></p>
+      <p id="acnote"></p>
     </div>
     <div class="side">
       <div class="legend mat" aria-label="Materiali">
@@ -71,13 +75,21 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
           <li><i class="sw" style="background:#7a8442"></i>Divano (scelto)</li>
           <li><i class="sw" style="background:#f4f4f2"></i>Cucina (esistente)</li>
           <li><i class="sw" style="background:#b9bab4"></i>Tavolo (esistente)</li>
+          <li><i class="sw" style="background:#d8cbb2"></i>Sedie JYSK THORUP (beige / effetto rovere)</li>
           <li><i class="sw" style="background:#e2d6bf"></i>Tappeto sabbia</li>
-          <li><i class="sw" style="background:#f3f1ec"></i>Disimpegno: nicchia con ante, ripostiglio</li>
+          <li><i class="sw" style="background:#f3f1ec"></i>Disimpegno: nicchia (lavatrice), ripostiglio, scarpiera sospesa</li>
+          <li><i class="sw" style="background:#a47a52"></i>Terrazzo: tavolo, divanetti in teak, aromatiche</li>
+          <li><i class="sw" style="background:#e4e4e0"></i>Climatizzatori: 3 split + motore</li>
           <li><i class="sw" style="background:#c98a6e"></i>Terrazzo: cotto 20×20, parapetto con copertina</li>
           <li><i class="sw" style="background:#4a2f22"></i>Porta blindata d'ingresso</li>
           <li><i class="sw" style="background:#fbfbf9"></i>Bagno: sanitari sospesi, termoarredo</li>
           <li><i class="sw" style="background:#3b3d40"></i>Bagno: doccia 110×70 in vetro, piatto in ardesia</li>
           <li><i class="sw" style="background:#e9e3d7"></i>Bagno: rivestimento esistente</li>
+          <li><i class="sw" style="background:#ddc9ad"></i>Camera 2: scrivania 160×70 rovere</li>
+          <li><i class="sw" style="background:#f3f1ec"></i>Camera 2: armadio / ponte, letto divano estraibile</li>
+          <li><i class="sw" style="background:#e9e4dc"></i>Camera 1: armadio 299 bianco con colonna a giorno in rovere</li>
+          <li><i class="sw" style="background:#c4a27b"></i>Camera 1: comò e comodini rovere + bianco a scacchi</li>
+          <li><i class="sw" style="background:#cdbfac"></i>Camera 1: letto 178×209 tessuto Felver Lars col. 82</li>
         </ul>
       </div>
       <div class="legend" aria-label="Stanze e superfici">
@@ -91,7 +103,11 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
     <div class="row" role="toolbar" aria-label="Viste" id="views"></div>
     <div class="row opts" role="toolbar" aria-label="Opzioni">
       <button id="t-doors" aria-pressed="false">Chiudi porte</button>
+      <button id="t-win" aria-pressed="false">Apri finestre</button>
       <button id="t-sedute" aria-pressed="false">Sedute estratte</button>
+      <button id="t-cam2">Camera 2: proposta A</button>
+      <button id="t-bed" aria-pressed="false">Letto ospiti aperto</button>
+      <button id="t-ac">Motore AC: a terra</button>
       <button id="t-cut" aria-pressed="false">Pareti tagliate a 110 cm</button>
       <button id="t-edge" aria-pressed="true">Contorni</button>
       <button id="t-imp" aria-pressed="true">Impianti</button>
@@ -254,14 +270,31 @@ Object.entries(DATA.rooms).forEach(([n,r])=>{ if(!ROOM[n].skirt) return; const p
       if(ok && s0===null) s0=s; if(!ok && s0!==null){ flush(s0,s); s0=null; } }
   } });
 
+// ---------- ante apribili delle finestre (pulsante "Apri finestre") ----------
+// anta costruita in coordinate locali: lungo +x da 0 a len, cerniera nell'origine; dir = direzione dell'anta chiusa in pianta, inward = verso l'interno
+const windows=[];
+function wleaf(o){ const {hx,hz,dir,len,y0,y1,inward,mat}=o; const th=Math.atan2(-dir[1],dir[0]);
+  const s=Math.sign(-Math.sin(th)*inward[0]-Math.cos(th)*inward[1])||1, hs=Math.sign(Math.sin(th)*inward[0]+Math.cos(th)*inward[1])||1;
+  const G=new THREE.Group(); G.position.set(cm(hx),0,cm(hz)); G.rotation.y=th; scene.add(G);
+  const P=[], w=o.w||6, T=2.5, bot=o.bot||10;
+  P.push(box(0,w,-T,T,y0,y1,mat,G), box(len-w,len,-T,T,y0,y1,mat,G), box(w,len-w,-T,T,y0,y0+bot,mat,G), box(w,len-w,-T,T,y1-w,y1,mat,G));
+  if(o.trav){ const [ta,tb]=o.trav; P.push(box(w,len-w,-T,T,ta,tb,mat,G), box(w,len-w,-1,1,tb,y1-w,M.glass,G,{cast:false}), box(w,len-w,-1,1,y0+bot,ta,o.lower||M.glass,G,{cast:false})); }
+  else P.push(box(w,len-w,-1,1,y0+bot,y1-w,M.glass,G,{cast:false}));
+  if(o.handle!==false){ const hy=o.handleY||110, za=[hs*T,hs*(T+6)].sort((a,b)=>a-b), hm=o.hmat||M.chrome;
+    P.push(box(len-4.5,len-2.5,za[0],za[1],hy-1.2,hy+1.2,hm,G,{cast:false}), box(len-14,len-2.5,hs>0?za[1]-1.5:za[0],hs>0?za[1]:za[0]+1.5,hy-1.2,hy+1.2,hm,G,{cast:false})); }
+  P.forEach(m=>scaled.push({m,h:y1}));
+  windows.push({G,th,phi:s*(o.angle||Math.PI/2)}); }
+
 // ---------- aperture: architravi, serramenti ----------
 const lintels=[], scaled=[];
 DATA.ops.forEach(o=>{ const [x1,z1,x2,z2]=o.box; const along=(x2-x1)>(z2-z1);
   const l=box(x1,x2,z1,z2,o.h,H,M.wall); l.material=[M.wall,M.wall,M.cap,M.wall,M.wall,M.wall]; lintels.push({m:l,h:o.h});
   if(o.type==='win' && !o.name.startsWith('Bagno') && !o.name.startsWith('PF Camera 2')){ const mx=(x1+x2)/2, mz=(z1+z2)/2; const parts=[];
-    parts.push(along? box(x1+4,x2-4,mz-1,mz+1,4,o.h-4,M.glass,null,{cast:false}) : box(mx-1,mx+1,z1+4,z2-4,4,o.h-4,M.glass,null,{cast:false}));
-    if(along){ parts.push(box(x1,x1+5,mz-3,mz+3,0,o.h,M.winWood), box(x2-5,x2,mz-3,mz+3,0,o.h,M.winWood), box(x1,x2,mz-3,mz+3,o.h-5,o.h,M.winWood)); if(x2-x1>95) parts.push(box((x1+x2)/2-2.5,(x1+x2)/2+2.5,mz-3,mz+3,0,o.h,M.winWood)); }
-    else parts.push(box(mx-3,mx+3,z1,z1+5,0,o.h,M.winWood), box(mx-3,mx+3,z2-5,z2,0,o.h,M.winWood), box(mx-3,mx+3,z1,z2,o.h-5,o.h,M.winWood));
+    // porte-finestre in legno: telaio fisso + ante battenti verso l'interno (a due ante se > 95 cm)
+    if(along){ parts.push(box(x1,x1+5,mz-3,mz+3,0,o.h,M.winWood), box(x2-5,x2,mz-3,mz+3,0,o.h,M.winWood), box(x1,x2,mz-3,mz+3,o.h-5,o.h,M.winWood));
+      const L=(x2-x1-10)/2; wleaf({hx:x1+5,hz:mz,dir:[1,0],len:L,y0:0,y1:o.h-5,inward:[0,1],mat:M.winWood,handleY:110}); wleaf({hx:x2-5,hz:mz,dir:[-1,0],len:L,y0:0,y1:o.h-5,inward:[0,1],mat:M.winWood,handle:false}); }
+    else { parts.push(box(mx-3,mx+3,z1,z1+5,0,o.h,M.winWood), box(mx-3,mx+3,z2-5,z2,0,o.h,M.winWood), box(mx-3,mx+3,z1,z2,o.h-5,o.h,M.winWood));
+      wleaf({hx:mx,hz:z2-5,dir:[0,-1],len:z2-z1-10,y0:0,y1:o.h-5,inward:[1,0],mat:M.winWood,handleY:110}); }
     parts.forEach(p=>scaled.push({m:p,h:o.h})); }
   if(o.type==='door'){ // coprifili rovere su entrambi i lati, 7 cm, sporgenza 1,2
     const C=7,T=1.2, top=o.h+C; const CM=o.name.startsWith('Ingresso')?M.blinda:M.wood;
@@ -309,7 +342,8 @@ pocket('Disimpegno-Soggiorno 80x210',[0,1]);
   [40,105,170].forEach(y=>P.push(box(fx-1,fx,z1+5,z1+7,y,y+12,D,null,{cast:false})));   // cerniere lato finestre
   P.forEach(m=>scaled.push({m,h}));
 }
-let doorsOpen=1, doorsTarget=1;
+let doorsOpen=1, doorsTarget=1, winOpen=0, winTarget=0;
+function applyWin(k){ windows.forEach(w=>w.G.rotation.y=w.th+w.phi*k); }
 function applyDoors(k){ doors.forEach(d=>{ if(d.kind==='pocket'){ d.P.position.copy(d.base).addScaledVector(d.open,k); d.P.visible = k<0.97 || wallH<206; }
   else d.P.rotation.y=d.openRot*k; }); }
 
@@ -320,10 +354,9 @@ function applyDoors(k){ doors.forEach(d=>{ if(d.kind==='pocket'){ d.P.position.c
   // finestra 80x255: un'anta, cerniere a sinistra guardando da dentro, traverso a ~100, vetro decorato sotto
   const o=OP['Bagno 80x255']; const [x1,z1,x2,z2]=o.box; const fx1=-670, fx2=-664, h=o.h;
   const P=[]; const W=M.winWood;
-  P.push(box(fx1,fx2,z1,z1+7,0,h,W), box(fx1,fx2,z2-7,z2,0,h,W), box(fx1,fx2,z1,z2,h-7,h,W), box(fx1,fx2,z1,z2,0,8,W), box(fx1,fx2,z1,z2,96,104,W));
-  P.push(box(fx1+2,fx2-2,z1+7,z2-7,104,h-7,M.glass,null,{cast:false}), box(fx1+2,fx2-2,z1+7,z2-7,8,96,M.decoGlass,null,{cast:false}));
-  P.push(box(fx2,fx2+7,z1+3,z1+5,148,151,M.brass,null,{cast:false}), box(fx2,fx2+1.5,z1+3,z1+5,140,152,M.brass,null,{cast:false}));   // maniglia (lato Camera 1)
-  [60,200].forEach(y=>P.push(box(fx2,fx2+1.5,z2-5,z2-3,y,y+10,M.brass,null,{cast:false})));                                      // cerniere (lato opposto)
+  P.push(box(fx1,fx2,z1,z1+3,0,h,W), box(fx1,fx2,z2-3,z2,0,h,W), box(fx1,fx2,z1,z2,h-3,h,W));
+  // anta apribile verso l'interno, cerniere lato WC, maniglia lato Camera 1 a ~150
+  wleaf({hx:(fx1+fx2)/2,hz:z2-3,dir:[0,-1],len:z2-z1-6,y0:0,y1:h-3,inward:[1,0],mat:W,w:7,bot:8,trav:[96,104],lower:M.decoGlass,handleY:150,hmat:M.brass});
   P.forEach(m=>scaled.push({m,h}));
   // cassonetto avvolgibile interno sopra la finestra
   scaled.push({m:box(WX,WX+20,z1-6,z2+6,h,H,M.white),h:H});
@@ -386,18 +419,21 @@ const highOnly=[];
     highOnly.push({m:box(XF+0.8,XF+1.6,(a+b)/2-6,(a+b)/2+6,CH+5,CH+6.5,M.chrome,null,{cast:false}),h:CH}); });
   // nicchia: coprifilo bianco e due ante battenti a filo, pomelli a incasso a ~105 cm
   const T=[]; T.push(box(X1,X1+4,ZF-1.5,ZF+1,0,CH,M.white), box(X2-4,X2,ZF-1.5,ZF+1,0,CH,M.white), box(X1,X2,ZF-1.5,ZF+1,CH-5,CH,M.white));
-  const mid=(X1+X2)/2; T.push(box(X1+4.3,mid-0.3,ZF-1,ZF+1.5,2,CH-5.3,M.white), box(mid+0.3,X2-4.3,ZF-1,ZF+1.5,2,CH-5.3,M.white));
-  [mid-6,mid+6].forEach(x=>{ const p=new THREE.Mesh(new THREE.CylinderGeometry(0.018,0.018,0.006,20),M.chrome); p.rotation.x=Math.PI/2; p.position.set(cm(x),cm(105),cm(ZF-1.2)); scene.add(p); T.push(p); });
+  // due ante battenti a filo (si aprono con il pulsante porte), pomelli a incasso a ~105 cm
+  const mid=(X1+X2)/2;
+  [[X1+4.3,mid-0.3,1],[X2-4.3,mid+0.3,-1]].forEach(([hx,ex,s])=>{ const G=new THREE.Group(); scene.add(G); const P=new THREE.Group(); G.add(P);
+    P.position.set(cm(hx),0,cm(ZF-1)); const w=Math.abs(ex-hx);
+    box(s>0?0:-w,s>0?w:0,0,2.5,2,CH-5.3,M.white,P);
+    const k=new THREE.Mesh(new THREE.CylinderGeometry(0.018,0.018,0.006,20),M.chrome); k.rotation.x=Math.PI/2; k.position.set(cm(s*(w-6)),cm(105),cm(-0.2)); P.add(k);
+    doors.push({G,P,kind:'swing',openRot:s*Math.PI*0.55,h:CH}); });
   T.forEach(m=>scaled.push({m,h:CH}));
 }
 
 // ---------- cameretta (Camera 2): elementi fissi da foto e video (quote stimate) ----------
 { // porta-finestra 100x255 a un'anta in legno: cerniere a destra guardando da dentro, maniglia a sinistra a ~110
   const o=OP['PF Camera 2 100x255']; const [x1,z1,x2,z2]=o.box; const fz1=95, fz2=101, h=o.h, W=M.winWood, P=[];
-  P.push(box(x1,x1+7,fz1,fz2,0,h,W), box(x2-7,x2,fz1,fz2,0,h,W), box(x1,x2,fz1,fz2,h-7,h,W), box(x1+7,x2-7,fz1,fz2,0,10,W));
-  P.push(box(x1+7,x2-7,fz1+2,fz2-2,10,h-7,M.glass,null,{cast:false}));
-  P.push(box(x1+3,x1+5,fz2,fz2+7,108,111,M.chrome,null,{cast:false}), box(x1+3,x1+5,fz2,fz2+1.5,100,112,M.chrome,null,{cast:false}));
-  [50,200].forEach(y=>P.push(box(x2-5,x2-3,fz2,fz2+1.5,y,y+10,M.brass,null,{cast:false})));
+  P.push(box(x1,x1+4,fz1,fz2,0,h,W), box(x2-4,x2,fz1,fz2,0,h,W), box(x1,x2,fz1,fz2,h-4,h,W));
+  wleaf({hx:x2-4,hz:(fz1+fz2)/2,dir:[-1,0],len:x2-x1-8,y0:0,y1:h-4,inward:[0,1],mat:W,w:7,handleY:110});   // anta unica, cerniere a destra guardando da dentro
   P.forEach(m=>scaled.push({m,h}));
   scaled.push({m:box(x1-6,x2+6,110.3,130,h,H,M.white),h:H});           // cassonetto avvolgibile interno
   // calorifero a colonne ~60x65 sulla parete finestra, tra l'angolo con la Camera 1 e la finestra
@@ -436,8 +472,8 @@ const terraceTop=[];
   { const a=C(79.06,84.05), b=C(81.82,126.65), x1=a[0], x2=b[0], z1=a[1], z2=b[1];
     box(x1,x2,z1,z2,0,100,M.wall); const l=box(x1,x2,z1,z2,220,H,M.wall); lintels.push({m:l,h:220});
     const P=[]; const xm=(x1+x2)/2;
-    P.push(box(xm-3,xm+3,z1,z1+6,100,220,M.pvc), box(xm-3,xm+3,z2-6,z2,100,220,M.pvc), box(xm-3,xm+3,z1,z2,214,220,M.pvc), box(xm-3,xm+3,z1,z2,100,106,M.pvc), box(xm-3,xm+3,(z1+z2)/2-3,(z1+z2)/2+3,100,220,M.pvc));
-    P.push(box(xm-1,xm+1,z1+6,z2-6,106,214,M.glass,null,{cast:false}));
+    P.push(box(xm-3,xm+3,z1,z1+5,100,220,M.pvc), box(xm-3,xm+3,z2-5,z2,100,220,M.pvc), box(xm-3,xm+3,z1,z2,215,220,M.pvc), box(xm-3,xm+3,z1,z2,100,105,M.pvc));
+    { const L=(z2-z1-10)/2; wleaf({hx:xm,hz:z1+5,dir:[0,1],len:L,y0:105,y1:215,inward:[1,0],mat:M.pvc,bot:6,handleY:160}); wleaf({hx:xm,hz:z2-5,dir:[0,-1],len:L,y0:105,y1:215,inward:[1,0],mat:M.pvc,bot:6,handle:false}); }
     box(x2,x2+4,z1-3,z2+3,97,100,M.granite);            // davanzale interno
     P.forEach(m=>scaled.push({m,h:220})); }
   // lato esterno (lato ovest in pianta): vicino all'angolo con la testata, spalla piena, apertura senza infissi su parapetto e tratto di muro pieno; poi parapetto aperto fino alla testata est
@@ -579,21 +615,274 @@ box(10,18,395,403,66,86,M.pot,tvGrp);
 box(195,225,22,52,0,38,M.pot);
 [[0,0,0,0.2],[0.08,0.22,0.05,0.15],[-0.07,0.3,-0.04,0.13],[0.03,0.45,0.02,0.11]].forEach(([dx,dy,dz,r])=>{const b=new THREE.Mesh(new THREE.IcosahedronGeometry(r,1),M.plant); b.position.set(cm(210)+dx,0.62+dy,cm(37)+dz); b.castShadow=true; scene.add(b);});
 
-// ---------- tavolo esistente 120x80 + 4 sedie in legno ----------
+// ---------- tavolo esistente 120x80 + 4 sedie JYSK THORUP ----------
 const tb=new THREE.Group(); scene.add(tb);
 box(120,240,429,509,67,75,M.concrete,tb);
 [449,489].forEach(z=>{ tube(V(140,2,z),V(220,67,z),0.016,tb); tube(V(220,2,z),V(140,67,z),0.016,tb); });
 [140,220].forEach(x=>tube(V(x,2,437),V(x,2,501),0.022,tb));
-function chair(cx,cz,face){ const g=new THREE.Group(); scene.add(g); const w=44,d=42;
-  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sz])=>{ const x=cx+sx*(w/2-3), z=cz+sz*(d/2-3); box(x-1.6,x+1.6,z-1.6,z+1.6,0,43,M.wood,g); });
-  box(cx-w/2,cx+w/2,cz-d/2,cz+d/2,43,46.5,M.wood,g); const bz=cz-face*(d/2-2);
-  box(cx-w/2+2,cx-w/2+5,bz-1.5,bz+1.5,46,84,M.wood,g); box(cx+w/2-5,cx+w/2-2,bz-1.5,bz+1.5,46,84,M.wood,g); box(cx-w/2+2,cx+w/2-2,bz-1.5,bz+1.5,68,84,M.wood,g); }
+// sedia JYSK THORUP (scheda): 52x54, seduta h 48, tot 84; seduta e schienale imbottiti in tessuto beige, gambe in acciaio effetto rovere naturale
+const CH_FAB=new THREE.MeshStandardMaterial({color:0xd8cbb2,roughness:0.95});
+const CH_LEG=new THREE.MeshStandardMaterial({color:0xc9a77c,roughness:0.45,metalness:0.15});
+function chair(cx,cz,face){ const g=new THREE.Group(); scene.add(g); const w=52,d=54;
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sz])=>{ tube(V(cx+sx*(w/2-2),0,cz+sz*(d/2-2)),V(cx+sx*(w/2-7),40,cz+sz*(d/2-8)),0.011,g).material=CH_LEG; });
+  box(cx-w/2+3,cx+w/2-3,cz-d/2+4,cz+d/2-4,40,48,CH_FAB,g);
+  const bz=cz-face*(d/2-5); const back=box(cx-w/2+3,cx+w/2-3,bz-3,bz+3,52,84,CH_FAB,g); back.rotation.x=face*0.12;
+  [cx-w/2+8,cx+w/2-8].forEach(x=>{ tube(V(x,46,bz),V(x,56,bz),0.008,g).material=CH_LEG; }); }
 chair(150,408,1); chair(210,408,1); chair(150,530,-1); chair(210,530,-1);
 // lampade a sospensione
 const cords=[];
 function pendant(x,z,yb){ const cone=new THREE.Mesh(new THREE.ConeGeometry(0.22,0.24,24,1,true),M.fiber); cone.position.set(cm(x),cm(yb),cm(z)); scene.add(cone);
   const c=tube(V(x,yb+12,z),V(x,H,z),0.003,scene); c.material=M.black; cords.push({cone,c}); }
 pendant(180,469,170); pendant(140,175,215);
+
+// ---------- cameretta (Camera 2): studio + ospiti, proposte di arredo (quote di progetto, da verificare) ----------
+// riferimenti: parete verso Camera 1 x=-260 (sud), parete verso soggiorno x=-12 (nord), parete finestra z=112 (ovest), parete porta z=482 (est)
+// letto: IKEA HEMNES letto divano, misure da scheda IKEA: 209x86, h 83; aperto profondità totale 162 (letto 160x200); cassetti aperti 119 — livello dell'estraibile indicativo
+const C2={layouts:{}, cur:'A', bedOpen:false};
+{ const W2=new THREE.MeshStandardMaterial({color:0xf4f2ed,roughness:0.5});
+  const MAT=new THREE.MeshStandardMaterial({color:0xf0ece4,roughness:0.95});
+  const SEAT=new THREE.MeshStandardMaterial({color:0x55574f,roughness:0.85});
+  const THROW=new THREE.MeshStandardMaterial({color:0xd9ccb4,roughness:1});
+  const BD=86, BL=209, BH=83, BO=162;           // letto: profondità, lunghezza, altezza, ingombro aperto
+  function layout(key,cfg){ const G=new THREE.Group(); scene.add(G); const L={G,chair:null,chairPos:null,open:[],closed:[]};
+    const sc=(m,h)=>{ scaled.push({m,h}); return m; };
+    // --- scrivania 160 x d, piano rovere chiaro sp. 3 (h 72-75), gambe bianche ---
+    { const {xw,s,z1,z2,d}=cfg.desk, xa=Math.min(xw,xw+s*d), xb=Math.max(xw,xw+s*d);
+      box(xa,xb,z1,z2,72,75,M.wood,G);
+      [[xa+3,z1+3],[xa+3,z2-7],[xb-7,z1+3],[xb-7,z2-7]].forEach(([x,z])=>box(x,x+4,z,z+4,0,72,W2,G));
+      const zc=(z1+z2)/2, mx=a=>xw+s*a, r=(a,b)=>[Math.min(mx(a),mx(b)),Math.max(mx(a),mx(b))];
+      // monitor 27" su piedistallo, tastiera, mouse, lampada da tavolo sul lato sinistro dell'utente
+      box(...r(6,24),zc-10,zc+10,75,76.5,M.black,G);
+      box(...r(12,15),zc-3,zc+3,76,92,M.black,G);
+      box(...r(15,18),zc-31,zc+31,88,124,M.black,G);
+      box(...r(18,18.4),zc-30,zc+30,89,123,M.tvScreen,G,{cast:false});
+      box(...r(36,50),zc-22,zc+22,75,77,M.black,G);
+      box(...r(38,48),zc+30,zc+36,75,76,M.black,G);
+      const lz=cfg.lampZ; box(...r(8,22),lz-7,lz+7,75,77,M.black,G);
+      tube(V(mx(15),77,lz),V(mx(22),112,lz),0.006,G).material=M.black; tube(V(mx(22),112,lz),V(mx(38),118,lz),0.006,G).material=M.black;
+      const sh=new THREE.Mesh(new THREE.ConeGeometry(0.06,0.09,20,1,true),M.fiber); sh.position.set(cm(mx(38)),cm(112),cm(lz)); G.add(sh);
+      // sedia da ufficio (rivolta verso la parete della scrivania)
+      const ch=new THREE.Group(); G.add(ch);
+      for(let i=0;i<5;i++){ const a=i/5*Math.PI*2; const leg=box(-1.5,1.5,0,30,4,7,M.black,ch); leg.geometry.translate(0,0,cm(15)); leg.position.set(0,cm(5.5),0); leg.rotation.y=a; }
+      const st=new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.38,14),M.chrome); st.position.y=cm(25); ch.add(st);
+      box(-24,24,-24,24,44,51,SEAT,ch);
+      box(18,22,-21,21,50,98,SEAT,ch);
+      if(s<0) ch.rotation.y=Math.PI;
+      L.chair=ch; L.chairPos=[xw+s*cfg.chairIn, xw+s*cfg.chairOut, zc]; ch.position.set(cm(L.chairPos[1]),0,cm(zc)); }
+    // --- armadio ad ante scorrevoli bianche (fuori dalla rotazione della porta) ---
+    if(cfg.ward){ const {xw,s,z1,z2,h}=cfg.ward, X=a=>xw+s*a, rng=(a,b)=>[Math.min(X(a),X(b)),Math.max(X(a),X(b))];
+      sc(box(...rng(0,58),z1,z2,0,h,M.white,G),h);
+      const zm=(z1+z2)/2;
+      [[58.5,61,z1+0.5,zm+2],[61.5,64,zm-2,z2-0.5]].forEach(([p,q,za,zb],i)=>{ sc(box(...rng(p,q),za,zb,3,h-2,W2,G),h-2);
+        const hz=i===0? za+3 : zb-4; sc(box(...rng(q,q+1.5),hz,hz+1.2,90,150,M.chrome,G,{cast:false}),150); }); }
+    // --- ponte sopra il letto: pensili sospesi a parete, profondità 35, da h 160 a 236, ante bianche a pressione ---
+    if(cfg.bridge){ const {xw,s,z1,z2,y1,y2,d}=cfg.bridge, X=a=>xw+s*a, rng=(a,b)=>[Math.min(X(a),X(b)),Math.max(X(a),X(b))];
+      sc(box(...rng(0,d-2),z1,z2,y1,y2,M.white,G),y2);
+      const n=Math.round((z2-z1)/70), w=(z2-z1)/n;
+      for(let i=0;i<n;i++) sc(box(...rng(d-2,d),z1+i*w+0.3,z1+(i+1)*w-0.3,y1+0.3,y2-0.3,W2,G),y2); }
+    // --- letto divano estraibile HEMNES (209x86 h 83; aperto 162) ---
+    { const {xw,s,z1,head}=cfg.bed, z2=z1+BL, X=a=>xw+s*a, rng=(a,b)=>[Math.min(X(a),X(b)),Math.max(X(a),X(b))];
+      box(...rng(0,BD),z1+5,z2-5,6,30,M.white,G);                         // base con cassetti
+      for(let i=0;i<3;i++){ const w=(BL-10)/3; box(...rng(BD-0.6,BD),z1+5+i*w+0.6,z1+5+(i+1)*w-0.6,9,27,W2,G,{cast:false}); }
+      box(...rng(0,6),z1,z2,0,BH,M.white,G);                              // schienale
+      box(...rng(0,BD),z1,z1+5,0,BH,M.white,G); box(...rng(0,BD),z2-5,z2,0,BH,M.white,G);   // testate
+      box(...rng(6,BD-2),z1+5,z2-5,30,44,MAT,G);
+      const cush=[M.fabric,M.ecru,M.terracotta], seg=(BL-14)/3;
+      cush.forEach((mt,i)=>{ const m=box(...rng(8,24),z1+7+i*seg+2,z1+7+(i+1)*seg-2,44,82,mt,G); m.rotation.z=s*0.12; L.closed.push(m); });
+      // estraibile (notte): seconda rete con materasso 80x200 affiancata
+      const t1=box(...rng(BD+1,BO),z1+5,z2-5,2,26,M.white,G), t2=box(...rng(BD+1,BO-1),z1+6,z2-6,26,40,MAT,G); L.open.push(t1,t2);
+      const hz=head==='z1'? z1+8 : z2-48;
+      [[10,BD-4,52],[BD+5,BO-5,48]].forEach(([p,q,top])=>L.open.push(box(...rng(p,q),hz,hz+40,top-8,top,M.ecru,G)));
+      const fz=head==='z1'? z2-70 : z1+12; L.open.push(box(...rng(8,BD-3),fz,fz+58,44,45.5,THROW,G,{cast:false}));
+    }
+    C2.layouts[key]=L; }
+  // A (proposta di Cristian): scrivania nell'angolo SO sulla parete verso Camera 1, a ~36 cm dal calorifero; armadio 150 sulla stessa parete fino alla porta; letto sulla parete verso il soggiorno
+  layout('A',{ desk:{xw:-260,s:1,z1:160,z2:320,d:70}, lampZ:305, chairOut:95, chairIn:52,
+               ward:{xw:-260,s:1,z1:330,z2:480,h:236},
+               bed:{xw:-12,s:-1,z1:196,head:'z1'} });
+  // B: letto sulla parete verso Camera 1 con armadio a ponte (colonna dietro la porta + pensili sopra il letto); scrivania sulla parete verso il soggiorno, staccata dalla finestra (anta aperta a 90° fino a z ~195), luce da sinistra
+  layout('B',{ desk:{xw:-12,s:-1,z1:205,z2:365,d:70}, lampZ:220, chairOut:95, chairIn:52,
+               ward:{xw:-260,s:1,z1:401,z2:480,h:236},
+               bridge:{xw:-260,s:1,z1:190,z2:401,y1:160,y2:236,d:35},
+               bed:{xw:-260,s:1,z1:190,head:'z2'} });
+}
+function applyCam2(){ Object.entries(C2.layouts).forEach(([k,L])=>{ L.G.visible = k===C2.cur;
+  L.open.forEach(m=>m.visible=C2.bedOpen); L.closed.forEach(m=>m.visible=!C2.bedOpen);
+  L.chair.position.x=cm(C2.bedOpen? L.chairPos[0] : L.chairPos[1]); });
+  const n=document.getElementById('camnote'); if(n) n.textContent = C2.cur==='A'
+    ? 'Camera 2 · proposta A: scrivania 160×70 nell\'angolo sud-ovest, luce da destra; armadio 150 sulla stessa parete fino alla porta; letto divano HEMNES 209×86 (aperto 162) sulla parete verso il soggiorno.'
+    : 'Camera 2 · proposta B: letto divano HEMNES 209×86 (aperto 162) sulla parete verso Camera 1, con armadio a ponte (colonna 80 dietro la porta + pensili h 160–236); scrivania 160×70 sulla parete verso il soggiorno, a ~10 cm dall\'anta aperta della porta-finestra, luce da sinistra.'; }
+applyCam2();
+
+// ---------- camera matrimoniale (Camera 1): camera acquistata (ottobre 2026) — misure da scheda, finiture dall'immagine di riferimento, letto in tessuto Felver Lars col. 82 ----------
+// riferimenti: parete verso la cameretta x=-274 (nord), parete esterna x=-655 (sud), parete porta-finestra z=112 (ovest), parete porta z=477/482 (est)
+{ const lin=h=>new THREE.Color(h).convertSRGBToLinear();
+  const oakTex=canvasTex(256,512,(g,w,h)=>{ g.fillStyle='#c4a27b'; g.fillRect(0,0,w,h);
+    for(let i=0;i<160;i++){ const dk=rnd()<0.6; g.strokeStyle=dk?`rgba(150,112,74,${0.12+rnd()*0.22})`:`rgba(222,196,160,${0.12+rnd()*0.22})`; g.lineWidth=0.6+rnd()*2.2;
+      const x=rnd()*w; g.beginPath(); g.moveTo(x,0); g.bezierCurveTo(x+rnd()*14-7,h*0.3,x+rnd()*14-7,h*0.7,x+rnd()*8-4,h); g.stroke(); } });
+  const lars=canvasTex(128,128,(g,w,h)=>{ g.fillStyle='#cdbfac'; g.fillRect(0,0,w,h);           // tela a trama larga, beige con fiammature
+    for(let y=0;y<h;y+=4) for(let x=0;x<w;x+=4){ const r=rnd(); g.fillStyle=r<0.33?'rgba(245,240,230,0.55)':r<0.6?'rgba(150,118,90,0.35)':'rgba(205,190,170,0.3)'; g.fillRect(x+((y/4)%2?2:0),y,2,3); } },6,6);
+  const OAK=new THREE.MeshStandardMaterial({map:oakTex,roughness:0.6});
+  const WHT=new THREE.MeshStandardMaterial({color:lin(0xe9e4dc),roughness:0.55});
+  const EDGE=new THREE.MeshStandardMaterial({color:lin(0x5f5a54),roughness:0.6});
+  const FAB=new THREE.MeshStandardMaterial({map:lars,roughness:0.97});
+  const SEAM=new THREE.MeshStandardMaterial({color:lin(0xa8977f),roughness:0.95});
+  const LIN=new THREE.MeshStandardMaterial({color:lin(0xf4f2ee),roughness:0.9});
+  const DUV=new THREE.MeshStandardMaterial({color:lin(0x5d6150),roughness:0.95});
+  const BOOK=[0xf1eee8,0xe2dacd,0xd5c7b2].map(c=>new THREE.MeshStandardMaterial({color:lin(c),roughness:0.8}));
+  const G1=new THREE.Group(); scene.add(G1);
+  const B=(x1,x2,z1,z2,y1,y2,mat,hRef,opts)=>{ const m=box(x1,x2,z1,z2,y1,y2,mat,G1,opts); scaled.push({m,h:hRef}); return m; };
+
+  // --- armadio 299 x 58 x h 247: 6 ante battenti bianche + colonna a giorno in rovere (tra 4a e 5a anta), maniglie in rovere a cavallo delle coppie ---
+  // parete sud, nella nicchia z 122-477: spostato di 5 cm verso la finestra rispetto al centro, così l'anta vicina al pilastro si apre a 90° senza toccarlo
+  { const HW=247, XB=-655, XF=-597, Z1=(122.3+477.3)/2-149.5-5, Z2=Z1+299, s=1.8, SH=29, dw=(299-2*s-SH)/6;
+    B(XB,XF,Z1,Z1+s,0,HW,WHT,HW); B(XB,XF,Z2-s,Z2,0,HW,WHT,HW); B(XB,XF,Z1,Z2,HW-2,HW,WHT,HW);
+    B(XF-0.2,XF,Z1,Z1+s,0,HW,EDGE,HW,{cast:false}); B(XF-0.2,XF,Z2-s,Z2,0,HW,EDGE,HW,{cast:false}); B(XF-0.2,XF,Z1,Z2,HW-2,HW,EDGE,HW,{cast:false});   // filo scuro sul perimetro
+    // dal lato porta (z alto) verso la finestra: 4 ante, colonna a giorno, 2 ante
+    const zs=[]; let z=Z2-s; for(let i=0;i<4;i++){ zs.push([z-dw,z]); z-=dw; } const shelf=[z-SH,z]; z-=SH; for(let i=0;i<2;i++){ zs.push([z-dw,z]); z-=dw; }
+    B(XB,XF-2,shelf[1],Z2-s,0,HW,EDGE,HW); B(XB,XF-2,Z1+s,shelf[0],0,HW,EDGE,HW);   // corpo (scuro: si vede nelle fughe), esclusa la colonna a giorno
+    zs.forEach(([a,b])=>B(XF-2,XF,a+0.25,b-0.25,1.5,HW-2.3,WHT,HW));
+    // colonna a giorno in rovere: fianchi, schiena e ripiani
+    { const [a,b]=shelf; B(XB,XF,a,a+1.8,0,HW-2,OAK,HW); B(XB,XF,b-1.8,b,0,HW-2,OAK,HW); B(XB,XB+1.5,a,b,0,HW-2,OAK,HW);
+      [1.5,42,82,122,162,202,243].forEach(y=>B(XB+1.5,XF-0.5,a+1.8,b-1.8,y-1.5,y+0.3,OAK,HW));
+      [[42,22],[122,24],[202,20]].forEach(([y,hh])=>{ let zz=a+3; for(let k=0;k<5;k++){ const w=2.5+rnd()*1.5; B(XF-26,XF-6,zz,zz+w,y+0.3,y+0.3+hh*(0.75+rnd()*0.25),BOOK[k%3],HW,{cast:false}); zz+=w+0.3; } });
+      B(XF-22,XF-10,b-14,b-4,82.3,92,OAK,HW); }
+    // maniglie in rovere ~40 x 11 a h ~106-117, a cavallo delle coppie (pezzo corto sull'anta lato porta, lungo sull'altra)
+    [[zs[0],zs[1]],[zs[2],zs[3]],[zs[4],zs[5]]].forEach(([d1,d2])=>{ const j=d1[0];
+      B(XF,XF+2.5,j+0.4,j+14,106,117,OAK,HW); B(XF,XF+2.5,j-26,j-0.4,106,117,OAK,HW); }); }
+
+  // --- letto 178 x 209 x h 106 in tessuto Felver Lars col. 82: testata a canali verticali, giroletto contenitore, piedini scuri; testata sulla parete nord ---
+  const BC=287.3, BZ1=BC-89, BZ2=BC+89;                                  // spostato di 10 cm verso la finestra rispetto al centro della parete
+  { const HB=106, XH=-274, XE=XH-209;
+    B(XH-10,XH,BZ1,BZ2,7,HB-6,FAB,HB);                                    // testata
+    B(XH-9,XH-1,BZ1+6,BZ2-6,HB-6,HB,FAB,HB);                              // bordo superiore arrotondato (approssimato)
+    for(let i=1;i<9;i++){ const z=BZ1+i*(BZ2-BZ1)/9; B(XH-10.5,XH-9.6,z-0.4,z+0.4,44,HB-8,SEAM,HB,{cast:false}); }   // cuciture dei canali
+    B(XE,XH-10,BZ1,BZ2,7,37,FAB,HB);                                      // giroletto
+    [[XE+15,BZ1+15],[XE+15,BZ2-15],[XH-25,BZ1+15],[XH-25,BZ2-15]].forEach(([x,z])=>B(x-2.5,x+2.5,z-2.5,z+2.5,0,7,M.black,HB));
+    B(XE+5,XH-12,BZ1+9,BZ2-9,30,54,LIN,HB);                               // materasso 160 x 200 (indicativo)
+    B(XE-1.5,XE+115,BZ1+5,BZ2-5,52,57,DUV,HB);                            // piumone ripiegato verso il fondo
+    B(XE-2,XE-0.5,BZ1+5,BZ2-5,34,57,DUV,HB);
+    B(XE-1.5,XE+115,BZ1+5,BZ1+6.5,36,57,DUV,HB); B(XE-1.5,XE+115,BZ2-6.5,BZ2-5,36,57,DUV,HB);
+    B(XE+105,XE+125,BZ1+5,BZ2-5,57,60,DUV,HB);
+    B(XH-55,XH-15,BZ1+12,BZ1+84,54,66,LIN,HB); B(XH-55,XH-15,BZ2-84,BZ2-12,54,66,LIN,HB);   // cuscini
+  }
+
+  // fronte "a scacchi": pannello bianco e rovere affiancati su ogni cassetto (u: coordinata lungo il fronte da sinistra guardando il mobile)
+  function front(mk,u1,u2,y1,y2,whiteFirst,split){ const um=u1+(u2-u1)*split;
+    mk(u1,um-0.15,y1,y2,whiteFirst?WHT:OAK); mk(um+0.15,u2,y1,y2,whiteFirst?OAK:WHT); }
+
+  // --- comodini 53 x 47 x h 53 (x2): struttura rovere, due cassetti a scacchi bianco/rovere ---
+  function nightstand(zc){ const HN=53, XB=-274, XF=XB-47, z1=zc-26.5, z2=zc+26.5;
+    B(XF,XB,z1,z1+2,0,HN,OAK,HN); B(XF,XB,z2-2,z2,0,HN,OAK,HN); B(XF,XB,z1,z2,HN-2,HN,OAK,HN); B(XF,XB,z1,z2,0,3,OAK,HN);
+    B(XF+2,XB,z1+2,z2-2,3,HN-2,OAK,HN);
+    // guardando il comodino (verso nord) la sinistra è z basso
+    const mk=(y1,y2)=> (u1,u2,a,b,mat)=>B(XF-0.5,XF+2,z1+2+u1,z1+2+u2,a,b,mat,HN);
+    const W=49; front(mk(),0,W,27.8,HN-2.3,false,0.45); front(mk(),0,W,3.3,27.2,true,0.5); }
+  nightstand(BZ1-26.5); nightstand(BZ2+26.5);
+
+  // --- comò 123,5 x 51 x h 76: struttura rovere, tre cassetti a scacchi; parete est, contro il pilastro (x -563 / -439,5) ---
+  { const HC=76, X1=-563, X2=X1+123.5, ZB=477.3, ZF=ZB-51;
+    B(X1,X1+2,ZF,ZB,0,HC,OAK,HC); B(X2-2,X2,ZF,ZB,0,HC,OAK,HC); B(X1,X2,ZF,ZB,HC-2,HC,OAK,HC); B(X1,X2,ZF,ZB,0,4,OAK,HC);
+    B(X1+2,X2-2,ZF+2,ZB,4,HC-2,OAK,HC);
+    // guardando il comò (verso est) la sinistra è x alto
+    const mk=(u1,u2,a,b,mat)=>B(X2-2-u2,X2-2-u1,ZF-0.5,ZF+2,a,b,mat,HC);
+    const W=119.5, h=(HC-6)/3;
+    front(mk,0,W,4+2*h+0.3,4+3*h-0.3,true,0.58);
+    front(mk,0,W,4+h+0.3,4+2*h-0.3,false,0.42);
+    front(mk,0,W,4.3,4+h-0.3,true,0.58); }
+}
+
+// ---------- disimpegno: scarpiera sospesa nella rientranza verso il soggiorno (parete est, x -265 / -94) ----------
+{ const SX1=-239.5, SX2=-119.5, SZB=672.3, SZF=SZB-24, SY1=20, SY2=110;   // 2 moduli 60 x 24, h 90, fondo a 20 cm da terra
+  const S=[]; S.push(box(SX1,SX2,SZF+1.8,SZB,SY1,SY2,M.white));
+  for(let m=0;m<2;m++) for(let r=0;r<2;r++) S.push(box(SX1+m*60+0.3,SX1+(m+1)*60-0.3,SZF,SZF+1.8,SY1+r*45+0.3,SY1+(r+1)*45-0.3,M.wood));
+  S.forEach(m=>scaled.push({m,h:SY2}));
+  const bowl=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.07,0.04,24),M.terracotta); bowl.position.set(cm(-150),cm(SY2+2),cm(SZB-12)); scene.add(bowl); scaled.push({m:bowl,h:SY2+4});
+}
+// ---------- disimpegno: contenuto della nicchia (lavatrice, ripiani, aspirapolvere) ----------
+{ const WM=new THREE.MeshStandardMaterial({color:0xf7f7f5,roughness:0.3}), DK=new THREE.MeshStandardMaterial({color:0x4a4c50,roughness:0.4});
+  const N=[];
+  N.push(box(-378,-318,609,668,0,85,WM), box(-378,-318,608.5,609,74,84,DK));                       // lavatrice 60x60 h 85
+  { const r=new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.17,0.02,32),DK); r.rotation.x=Math.PI/2; r.position.set(cm(-348),cm(42),cm(608.6)); scene.add(r); N.push(r);
+    const g=new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.13,0.022,32),M.glass); g.rotation.x=Math.PI/2; g.position.set(cm(-348),cm(42),cm(608.4)); scene.add(g); N.push(g); }
+  N.push(box(-380,-317,632,672,103,105,M.white));                                                    // ripiano sopra la lavatrice
+  [[-376,0x3f7fb5,18],[-366,0xe9e3d6,22],[-356,0xb5653b,16],[-344,0x6f7a3c,20]].forEach(([x,c,h])=>N.push(box(x,x+8,640,652,105,105+h,new THREE.MeshStandardMaterial({color:c,roughness:0.5}))));
+  [143,183].forEach(y=>N.push(box(-380,-279,637,672,y,y+2,M.white)));                               // ripiani a tutta larghezza
+  N.push(box(-372,-330,642,668,145,165,M.ecru), box(-325,-290,642,668,185,200,M.ecru));             // scatole / panni
+  // aspirapolvere senza fili sulla base di ricarica + scopa/mocio, a destra della lavatrice
+  N.push(box(-308,-290,642,664,0,5,DK), box(-304,-294,650,662,58,84,DK));
+  N.push(tube(V(-299,5,648),V(-299,118,658),0.012,scene), tube(V(-286,2,662),V(-286,128,668),0.01,scene), box(-294,-280,648,668,0,3,M.ecru));
+  N.forEach(m=>scaled.push({m,h:200}));
+}
+
+// ---------- climatizzazione: 3 split interni sopra le porte (h ~27-28) ----------
+const AC={cur:'terra'};
+{ const ACM=new THREE.MeshStandardMaterial({color:0xfbfbf9,roughness:0.3}), SL=new THREE.MeshStandardMaterial({color:0x8e9094,roughness:0.4});
+  function split(x1,x2,z1,z2,y1,y2,front){ const P=[box(x1,x2,z1,z2,y1,y2,ACM)];
+    if(front==='-x') P.push(box(x1-0.5,x1,z1+3,z2-3,y1+2,y1+6,SL,null,{cast:false}));
+    else P.push(box(x1+3,x2-3,z1-0.5,z1,y1+2,y1+6,SL,null,{cast:false}));
+    P.forEach(m=>highOnly.push({m,h:210})); }
+  split(307,327,347.5,432.5,221,249,'-x');      // soggiorno, sopra la porta d'ingresso
+  split(-362,-282,462,482,218,245,'-z');        // camera matrimoniale, sopra la porta (sotto la trave a ~245)
+  split(-187,-107,462,482,218,245,'-z');        // cameretta, sopra la porta (sotto la trave a ~245)
+}
+// ---------- motore esterno trial-split sul terrazzo, parete della camera matrimoniale (tra la porta-finestra e l'angolo sud) ----------
+{ const GR=new THREE.MeshStandardMaterial({color:0xe4e4e0,roughness:0.45}), DK=new THREE.MeshStandardMaterial({color:0x2e3033,roughness:0.5}),
+        RB=new THREE.MeshStandardMaterial({color:0x1d1d1f,roughness:0.9});
+  const X1=-535, X2=-448, ZB=66, ZF=34, WALL=76.3;          // ~87 x 32, h 70 (indicativo)
+  function unit(G,y0,list){ const P=[];
+    P.push(box(X1,X2,ZF,ZB,y0,y0+70,GR,G));
+    const f=new THREE.Mesh(new THREE.CylinderGeometry(0.23,0.23,0.01,36),DK); f.rotation.x=Math.PI/2; f.position.set(cm(X1+32),cm(y0+35),cm(ZF-0.6)); G.add(f); P.push(f);
+    [-14,-5,4,13].forEach(dy=>P.push(box(X1+10,X1+54,ZF-1.4,ZF-0.8,y0+35+dy,y0+36+dy,GR,G,{cast:false})));
+    P.push(box(X2-16,X2-2,ZF-1,ZF,y0+10,y0+40,DK,G,{cast:false}));                 // coperchio attacchi
+    P.push(box(X2-10,X2-4,ZB,WALL,y0+50,y0+56,M.white,G));                           // canalina verso il muro
+    P.forEach(m=>list.push(m)); }
+  // a terra su supporti antivibranti
+  AC.terra=new THREE.Group(); scene.add(AC.terra); const T=[];
+  T.push(box(X1+6,X1+16,ZF-2,ZB+2,0,10,RB,AC.terra), box(X2-16,X2-6,ZF-2,ZB+2,0,10,RB,AC.terra));
+  unit(AC.terra,10,T); T.forEach(m=>scaled.push({m,h:80}));
+  // sospeso su staffe (fondo a ~180)
+  AC.sosp=new THREE.Group(); scene.add(AC.sosp); const S=[];
+  [X1+12,X2-12].forEach(x=>{ S.push(box(x-2,x+2,ZF-3,WALL,176,180,DK,AC.sosp), box(x-2,x+2,WALL-4,WALL,130,180,DK,AC.sosp)); });
+  unit(AC.sosp,180,S); S.forEach(m=>highOnly.push({m,h:180}));
+}
+function applyAC(){ AC.terra.visible=AC.cur==='terra'; AC.sosp.visible=AC.cur==='sospeso';
+  const n=document.getElementById('acnote'); if(n) n.textContent = AC.cur==='terra'
+    ? 'Motore climatizzatore a terra, su supporti antivibranti, sulla parete della camera matrimoniale (soluzione consigliata).'
+    : 'Motore climatizzatore sospeso su staffe (fondo a ~180 cm) sulla parete della camera matrimoniale.'; }
+applyAC();
+
+// ---------- terrazzo: arredo (teak, cuscini ecru) ----------
+{ const teakTex=canvasTex(256,512,(g,w,h)=>{ g.fillStyle='#a47a52'; g.fillRect(0,0,w,h);
+    for(let i=0;i<120;i++){ g.strokeStyle=`rgba(${110+rnd()*30},${75+rnd()*20},${45+rnd()*15},${0.15+rnd()*0.25})`; g.lineWidth=0.6+rnd()*2;
+      const x=rnd()*w; g.beginPath(); g.moveTo(x,0); g.bezierCurveTo(x+rnd()*12-6,h*0.3,x+rnd()*12-6,h*0.7,x+rnd()*8-4,h); g.stroke(); } });
+  const TK=new THREE.MeshStandardMaterial({map:teakTex,roughness:0.7});
+  const CU=new THREE.MeshStandardMaterial({color:0xe7e0d2,roughness:0.95});
+  const AN=new THREE.MeshStandardMaterial({color:0x3c3d3f,roughness:0.5});
+  const TG=new THREE.Group(); scene.add(TG);
+  // divanetto 2 posti: o={ax,u0,v0,sv}: lunghezza lungo ax a partire da u0; schienale a v0, profondità verso sv
+  function sofa(ax,u0,v0,sv,L,D){ const B=(u1,u2,v1,v2,y1,y2,mat)=>{ const a=[v0+sv*v1,v0+sv*v2].sort((p,q)=>p-q), b=[u0+u1,u0+u2];
+      return ax==='z'? box(a[0],a[1],b[0],b[1],y1,y2,mat,TG) : box(b[0],b[1],a[0],a[1],y1,y2,mat,TG); };
+    [[2,6],[L-6,L-2]].forEach(([p,q])=>[[2,6],[D-6,D-2]].forEach(([r,s])=>B(p,q,r,s,0,12,TK)));
+    B(0,6,0,D,12,60,TK); B(L-6,L,0,D,12,60,TK); B(6,L-6,0,6,12,74,TK); B(6,L-6,6,D,12,30,TK);
+    B(7,L-7,8,D-1,30,42,CU); B(8,L/2-1,6,18,42,70,CU); B(L/2+1,L-8,6,18,42,70,CU); }
+  sofa('z',-85,-751,1,130,70);       // A: contro la testata sud, sotto la finestra, guarda verso nord
+  sofa('x',-680,-118,1,125,70);      // B: lato parapetto, guarda verso la casa
+  // tavolino 60x60 h 41
+  box(-665,-605,-35,25,38,41,TK,TG); [[-662,-32],[-612,-32],[-662,18],[-612,18]].forEach(([x,z])=>box(x,x+4,z,z+4,0,38,TK,TG));
+  // tavolo da pranzo 140x80 h 75 lungo il parapetto (davanti alla cameretta, vicino al soggiorno), 4 sedie
+  box(-150,-10,-132,-52,72,75,TK,TG); [[-146,-128],[-19,-128],[-146,-61],[-19,-61]].forEach(([x,z])=>box(x,x+5,z,z+5,0,72,AN,TG));
+  function ochair(cx,cz,rot){ const g=new THREE.Group(); g.position.set(cm(cx),0,cm(cz)); g.rotation.y=rot; TG.add(g);
+    [[-20,-20],[17,-20],[-20,17],[17,17]].forEach(([x,z])=>box(x,x+3,z,z+3,0,44,AN,g));
+    box(-23,23,-23,23,42,45,TK,g); box(-23,23,-23,-20,45,84,TK,g); box(-21,21,-19,20,45,48,CU,g); }
+  ochair(-115,-26,Math.PI); ochair(-45,-26,Math.PI); ochair(-178,-92,Math.PI/2); ochair(18,-92,-Math.PI/2);
+  // aromatiche: fioriera 80x30 + due vasi lungo il parapetto, davanti alla porta-finestra del soggiorno (vicino alla cucina)
+  const POT=new THREE.MeshStandardMaterial({color:0xb5653b,roughness:0.85}), HERB=new THREE.MeshStandardMaterial({color:0x7d9a4f,roughness:0.9});
+  box(85,165,-141,-111,0,35,AN,TG);
+  [95,115,135,155].forEach((x,i)=>{ const b=new THREE.Mesh(new THREE.IcosahedronGeometry(0.1+0.02*(i%2),1),i%2?M.plant:HERB); b.position.set(cm(x+2),cm(44),cm(-126)); b.castShadow=true; TG.add(b); });
+  [[68,-124],[185,-127]].forEach(([x,z],i)=>{ const p=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.11,0.3,24),POT); p.position.set(cm(x),0.15,cm(z)); p.castShadow=true; TG.add(p);
+    const b=new THREE.Mesh(new THREE.IcosahedronGeometry(0.15,1),i?HERB:M.plant); b.position.set(cm(x),0.42,cm(z)); b.castShadow=true; TG.add(b); });
+}
 
 // ---------- etichette ----------
 const labels=[];
@@ -641,13 +930,20 @@ const VIEWS=[
  {k:'cuc',t:'Dalla cucina',p:[2.95,1.65,5.75],g:[0.9,0.85,1.6]},
  {k:'c1',t:'Camera 1',p:[-3.15,1.6,4.6],g:[-4.0,1.1,1.0]},
  {k:'c1b',t:'Camera 1 · porta',p:[-4.4,1.6,1.6],g:[-4.6,1.3,4.8]},
+ {k:'c1l',t:'Camera 1 · letto',p:[-5.9,1.75,1.5],g:[-3.0,0.6,3.0]},
+ {k:'c1a',t:'Camera 1 · armadio',p:[-3.25,1.6,2.1],g:[-6.4,1.2,3.0]},
+ {k:'c1t',t:'Camera 1 · pianta',p:[-4.65,7.2,3.0],g:[-4.65,0,2.97]},
  {k:'c2',t:'Camera 2',p:[-0.35,1.6,1.6],g:[-1.6,0.9,4.9]},
  {k:'c2b',t:'Camera 2 · finestra',p:[-1.4,1.6,4.5],g:[-1.3,1.1,1.0]},
+ {k:'c2t',t:'Camera 2 · pianta',p:[-1.36,7.2,3.0],g:[-1.36,0,2.97]},
  {k:'dis',t:'Disimpegno',p:[-1.0,1.55,5.05],g:[-3.9,1.55,6.15]},
+ {k:'dis2',t:'Disimpegno · scarpiera',p:[-2.15,1.65,5.1],g:[-1.8,0.65,6.65]},
  {k:'bagno',t:'Bagno',p:[-4.0,1.6,5.55],g:[-6.6,0.85,5.85]},
  {k:'bagno2',t:'Bagno · doccia',p:[-6.2,1.6,5.3],g:[-4.3,1.0,6.4]},
  {k:'ter',t:'Terrazzo',p:[-7.0,1.6,0.6],g:[0.2,1.2,-0.4]},
  {k:'ter2',t:'Terrazzo · est',p:[1.7,1.6,-1.2],g:[-5.0,0.9,0.3]},
+ {k:'ter3',t:'Terrazzo · relax',p:[-3.7,1.8,-1.05],g:[-6.6,0.5,0.05]},
+ {k:'ter4',t:'Terrazzo · pranzo',p:[-3.0,1.7,0.5],g:[-0.4,0.6,-0.9]},
 ];
 const vbar=document.getElementById('views');
 VIEWS.forEach(v=>{ const b=document.createElement('button'); b.id='v-'+v.k; b.dataset.view=v.k; b.textContent=v.t; b.setAttribute('aria-pressed','false'); b.addEventListener('click',()=>goView(v.k)); vbar.appendChild(b); });
@@ -655,18 +951,24 @@ const vsel=document.getElementById('vsel');
 VIEWS.forEach(v=>{ const o=document.createElement('option'); o.value=v.k; o.textContent=v.t; vsel.appendChild(o); });
 vsel.addEventListener('change',()=>goView(vsel.value));
 let anim=null;
-function goView(k,instant){ const v=VIEWS.find(x=>x.k===k)||VIEWS[0]; k=v.k; if(vsel) vsel.value=k; document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===k)));
+function goView(k,instant){ const v=VIEWS.find(x=>x.k===k)||VIEWS[0]; k=v.k; vsel.value=k; document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===k)));
   const p=new THREE.Vector3(...v.p), t=new THREE.Vector3(...v.g);
   if(instant||matchMedia('(prefers-reduced-motion: reduce)').matches){ camera.position.copy(p); controls.target.copy(t); controls.update(); return; }
   anim={p0:camera.position.clone(),t0:controls.target.clone(),p,t,s:performance.now()}; }
 controls.addEventListener('start',()=>{ anim=null; document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed','false')); });
 const toggle=(id,fn)=>{ const b=document.getElementById(id); b.addEventListener('click',()=>{ const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',String(on)); fn(on); }); };
+toggle('t-info',on=>{ document.getElementById('infobar').classList.toggle('off',!on); document.getElementById('t-info').textContent=on?'Nascondi info e legenda':'Mostra info e legenda'; try{localStorage.setItem('casa3d-info',on?'1':'0');}catch(e){} });
+try{ if(localStorage.getItem('casa3d-info')==='1') document.getElementById('t-info').click(); }catch(e){}
 toggle('t-cut',on=>targetH=on?110:H);
 toggle('t-lab',on=>{ showLabels=on; labels.forEach(s=>s.visible=on); });
 toggle('t-edge',on=>edgeLines.forEach(e=>e.visible=on));
 toggle('t-imp',on=>{ showPlants=on; plants.forEach(m=>m.visible=on && wallH>=m.position.y*100); });
 toggle('t-sedute',on=>seats.position.x=on?-cm(40):0);
 toggle('t-doors',on=>doorsTarget=on?0:1);
+toggle('t-win',on=>{ winTarget=on?1:0; document.getElementById('t-win').textContent=on?'Chiudi finestre':'Apri finestre'; });
+toggle('t-bed',on=>{ C2.bedOpen=on; applyCam2(); });
+document.getElementById('t-ac').addEventListener('click',e=>{ AC.cur=AC.cur==='terra'?'sospeso':'terra'; e.currentTarget.textContent='Motore AC: '+(AC.cur==='terra'?'a terra':'sospeso'); applyAC(); });
+document.getElementById('t-cam2').addEventListener('click',e=>{ C2.cur=C2.cur==='A'?'B':'A'; e.currentTarget.textContent='Camera 2: proposta '+C2.cur; applyCam2(); });
 
 function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.fov=w<h?72:55; camera.updateProjectionMatrix(); }
 window.addEventListener('resize',resize); resize(); goView((location.hash||'#casa').slice(1),true);
@@ -676,6 +978,7 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 function loop(now){
   if(anim){ let k=Math.min(1,(now-anim.s)/900); k=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2; camera.position.lerpVectors(anim.p0,anim.p,k); controls.target.lerpVectors(anim.t0,anim.t,k); if(k>=1) anim=null; }
   if(wallH!==targetH){ wallH = (reduce.matches||Math.abs(wallH-targetH)<0.5)? targetH : wallH+(targetH-wallH)*0.18; applyHeight(wallH); }
+  if(winOpen!==winTarget){ winOpen = (reduce.matches||Math.abs(winOpen-winTarget)<0.01)? winTarget : winOpen+(winTarget-winOpen)*0.12; applyWin(winOpen); }
   if(doorsOpen!==doorsTarget){ doorsOpen = (reduce.matches||Math.abs(doorsOpen-doorsTarget)<0.01)? doorsTarget : doorsOpen+(doorsTarget-doorsOpen)*0.12; applyDoors(doorsOpen); }
   { const below=camera.position.y<cm(H)-0.05; terraceTop.forEach(m=>m.visible=below && wallH>=H-1); ceilPts.forEach(m=>m.visible=below && showPlants && wallH>=H-1); }
   controls.update(); renderer.render(scene,camera); requestAnimationFrame(loop); }
@@ -683,5 +986,6 @@ requestAnimationFrame(loop);
 })();
 </script>
 
-</body>
-</html>
+
+
+</body></html>

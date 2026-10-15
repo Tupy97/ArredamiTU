@@ -1,5 +1,5 @@
 // ArredamiTU service worker: rete prima, cache come riserva offline
-const CACHE = 'arredamitu-v5';
+const CACHE = 'arredamitu-v6';
 const ASSETS = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './casa3d.html', './vendor/three.min.js', './vendor/OrbitControls.js'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))); self.skipWaiting(); });
 self.addEventListener('activate', e => {
